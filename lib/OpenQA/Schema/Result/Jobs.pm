@@ -1960,15 +1960,8 @@ sub has_autoinst_log {
 sub git_log_diff {
     my ($self, $dir, $refspec_range) = @_;
     my $res = run_cmd_with_log_return_error(
-        ['git', '-C', $dir, 'log', '--pretty=oneline', '--abbrev-commit', '--no-merges', $refspec_range]);
+        ['git', '-C', $dir, 'log', '--stat', '--pretty=oneline', '--abbrev-commit', '--no-merges', $refspec_range]);
     # regardless of success or not the output contains the information we need
-    return "\n" . $res->{stderr} if $res->{stderr};
-}
-
-sub git_diff {
-    my ($self, $dir, $refspec_range) = @_;
-    my $timeout = OpenQA::App->singleton->config->{global}->{job_investigate_git_timeout} // 20;
-    my $res = run_cmd_with_log_return_error(['timeout', $timeout, 'git', '-C', $dir, 'diff', '--stat', $refspec_range]);
     return "\n" . $res->{stderr} if $res->{stderr};
 }
 
@@ -2004,7 +1997,6 @@ sub investigate {
         my $refspec_range = "$before->{TEST_GIT_HASH}..$after->{TEST_GIT_HASH}";
         $inv{test_log} = $self->git_log_diff($dir, $refspec_range);
         $inv{test_log} ||= 'No test changes recorded, test regression unlikely';
-        $inv{test_diff_stat} = $self->git_diff($dir, $refspec_range) if $inv{test_log};
         # no need for duplicating needles git log if the git repo is the same
         # as for tests
         if ($after->{TEST_GIT_HASH} ne $after->{NEEDLES_GIT_HASH}) {
@@ -2012,7 +2004,6 @@ sub investigate {
             my $refspec_needles_range = "$before->{NEEDLES_GIT_HASH}..$after->{NEEDLES_GIT_HASH}";
             $inv{needles_log} = $self->git_log_diff($dir, $refspec_needles_range);
             $inv{needles_log} ||= 'No needle changes recorded, test regression due to needles unlikely';
-            $inv{needles_diff_stat} = $self->git_diff($dir, $refspec_needles_range) if $inv{needles_log};
         }
         last;
     }
