@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1caf2a24_01c39241",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038843
+      },
+      "writtenOn": "2025-05-18T18:05:51Z",
+      "side": 1,
+      "message": "nothing more. lets merge and see",
+      "revId": "904774cf327aec9db6a012b3b3db6799fc5f4f71",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d67a64ef_47962d44",
+        "filename": "text3.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1038843
+      },
+      "writtenOn": "2025-05-18T18:05:51Z",
+      "side": 1,
+      "message": "anything else?",
+      "revId": "904774cf327aec9db6a012b3b3db6799fc5f4f71",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
