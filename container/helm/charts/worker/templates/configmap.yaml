@@ -24,6 +24,7 @@ data:
     [localhost]
     key = {{ .Values.openqa.key }}
     secret = {{ .Values.openqa.secret }}
+
     [{{ .Release.Name }}-webui:9529]
     key = {{ .Values.openqa.key }}
     secret = {{ .Values.openqa.secret }}
