@@ -1,0 +1,6 @@
+dependencies:
+- name: worker
+  repository: file://charts/worker/
+  version: 0.1.0
+digest: sha256:5f4e0c40be2adaedde23effb1629e78bf00f5228ae34afa7efe6c3e71e2dc90f
+generated: "2025-08-06T09:11:46.399516441+02:00"
