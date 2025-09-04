@@ -423,6 +423,12 @@ sub load_plugins ($server, $monitoring_root_route = undef, %options) {
     $server->plugin(Status => {route => $monitoring_root_route->get('/monitoring')})
       if $monitoring_root_route && $server->config->{global}{monitoring_enabled};
     $server->plugin("OpenAPI" => {url => $server->home->rel_file("api.json")});
+    $server->plugin(
+        SwaggerUI => {
+            route => $server->routes()->any('api/docs'),
+            url => "/api/v1",
+            title => "OpenQA App"
+        });
     # load auth module
     my $auth_method = $server->config->{auth}->{method};
     my $auth_module = "OpenQA::WebAPI::Auth::$auth_method";
