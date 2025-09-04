@@ -1,0 +1,66 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "OpenQA API PoC"
+  },
+  "basePath": "/api/v1",
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/poc/info": {
+      "get": {
+        "summary": "Get some example information (PoC)",
+        "operationId": "getInfo",
+        "x-mojo-to": "poc#get_info",
+        "responses": {
+          "200": {
+            "description": "A successful response with info.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {"type": "string"},
+                "version": {"type": "integer"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/poc/post": {
+      "post": {
+        "summary": "Submit some example data (PoC)",
+        "operationId": "submitData",
+        "x-mojo-to": "poc#post_data",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": ["name"],
+              "properties": {
+                "name": {"type": "string"},
+                "value": {"type": "integer", "default": 100}
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A confirmation that data was received.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {"type": "string"},
+                "received": {"type": "object"}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
