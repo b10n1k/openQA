@@ -1,0 +1,46 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "OpenQA API PoC"
+  },
+  "basePath": "/api/v1",
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/job_settings/jobs": {
+      "get": {
+        "summary": "Filters jobs based on a single setting key/value pair.",
+        "operationId": "apiv1_get_jobs_for_job_settings",
+        "x-mojo-to": "job_settings#jobs",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "list_value",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response with info.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "key": {"type": "string"},
+                "list_value": {"type": "string"}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
