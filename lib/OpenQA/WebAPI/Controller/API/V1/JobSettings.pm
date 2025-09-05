@@ -32,13 +32,9 @@ C<{misc_limits}{job_settings_max_recent_jobs}>.
 =cut
 
 sub jobs ($self) {
-    my $validation = $self->validation;
-    $validation->required('key')->like(qr/^[\w\*]+$/);
-    $validation->required('list_value')->like(qr/^\w+$/);
-    return $self->reply->validation_error({format => 'json'}) if $validation->has_error;
-
-    my $key = $validation->param('key');
-    my $list_value = $validation->param('list_value');
+    # Validation in openapi.json via parameters
+    my $key = $self->param('key');
+    my $list_value = $self->param('list_value');
     my $jobs = $self->schema->resultset('JobSettings')->jobs_for_setting({key => $key, list_value => $list_value});
     $self->render(json => {jobs => $jobs});
 }

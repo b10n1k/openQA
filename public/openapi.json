@@ -1,13 +1,11 @@
 {
-  "swagger": "2.0",
-  "info": {
-    "version": "1.0",
-    "title": "OpenQA API PoC"
-  },
-  "basePath": "/api/v1",
-  "schemes": ["http"],
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
+  "openapi": "3.0.3",
+  "info": { "version": "1.0", "title": "OpenQA API" },
+  "servers": [
+    {
+      "url": "/api/v1"
+    }
+  ],
   "paths": {
     "/job_settings/jobs": {
       "get": {
@@ -15,29 +13,39 @@
         "operationId": "apiv1_get_jobs_for_job_settings",
         "x-mojo-to": "job_settings#jobs",
         "parameters": [
-          {
-            "name": "key",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "list_value",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
+  {
+    "name": "key",
+    "in": "query",
+    "required": true,
+    "schema": {
+      "type": "string",
+      "pattern": "^[\\w\\*]+$"
+    }
+  },
+  {
+    "name": "list_value",
+    "in": "query",
+    "required": true,
+    "schema": {
+      "type": "string",
+      "pattern": "^\\w+$"
+    }
+  }
+],
         "responses": {
           "200": {
             "description": "A successful response with info.",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "key": {"type": "string"},
-                "list_value": {"type": "string"}
-              }
-            }
+            "content": {
+  "application/json": {
+    "schema": {
+      "type": "object",
+      "properties": {
+        "key": {"type": "string"},
+        "list_value": {"type": "string"}
+      }
+    }
+  }
+}
           }
         }
       }
