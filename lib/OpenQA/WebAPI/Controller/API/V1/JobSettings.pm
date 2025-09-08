@@ -33,8 +33,11 @@ C<{misc_limits}{job_settings_max_recent_jobs}>.
 
 sub jobs ($self) {
     # Validation in openapi.json via parameters
+    $self = $self->openapi->valid_input or return $self->reply->validation_error({format => 'json'});
     my $key = $self->param('key');
     my $list_value = $self->param('list_value');
+    #my $v = $self->param('foo');
+    #$self->app->log->debug("*****************$v");
     my $jobs = $self->schema->resultset('JobSettings')->jobs_for_setting({key => $key, list_value => $list_value});
     $self->render(json => {jobs => $jobs});
 }

@@ -325,7 +325,7 @@ sub startup ($self) {
     $api_ro->post('/jobs/restart')->name('apiv1_restart_jobs')->to('job#restart');
 
     # api/v1/job_settings/jobs
-    $api_public_r->get('/job_settings/jobs')->name('apiv1_get_jobs_for_job_settings')->to('job_settings#jobs');
+    #$api_public_r->get('/job_settings/jobs')->name('apiv1_get_jobs_for_job_settings')->to('job_settings#jobs');
 
     my $job_r = $api_ro->any('/jobs/<jobid:num>');
     push @api_routes, $job_r;
@@ -378,9 +378,9 @@ sub startup ($self) {
     $mm_api->get('/parents')->name('apiv1_mm_parents')->to('mm#get_parents');
 
     # api/v1/isos
-    $api_ro->get('/isos/<scheduled_product_id:num>')->name('apiv1_show_scheduled_product')
+    $api_ro->get('/isos/<sheduled_product_id:num>')->name('apiv1_show_scheduled_product')
       ->to('iso#show_scheduled_product');
-    $api_ro->post('/isos')->name('apiv1_create_iso')->to('iso#create');
+    #$api_ro->post('/isos')->name('apiv1_create_iso')->to('iso#create');
     $api_ra->delete('/isos/#name')->name('apiv1_destroy_iso')->to('iso#destroy');
     $api_ro->post('/isos/#name/cancel')->name('apiv1_cancel_iso')->to('iso#cancel');
     $api_ro->get('/isos/job_stats')->name('apiv1_scheduled_product_job_stats')->to('iso#job_statistics');

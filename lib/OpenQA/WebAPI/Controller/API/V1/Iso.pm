@@ -147,19 +147,19 @@ sub create {
     my $scheduled_product_clone_id
       = delete $params->{scheduled_product_clone_id};    # ID of a previous product to clone settings from
     my $log = $self->app->log;
-    my $validation = $self->validation;
+    # my $validation = $self->validation;
     my $scheduled_products = $self->schema->resultset('ScheduledProducts');
-
+    $self = $self->openapi->valid_input or return;
     # validate parameter
-    if (defined $scheduled_product_clone_id) {
-        $validation->required('scheduled_product_clone_id')->num();
-        if ($validation->has_error) {
-            return $self->render(text => 'Specified scheduled_product_id is invalid.', status => 400);
-        }
-    }
-    else {
-        return undef unless $self->validate_create_parameters;
-    }
+    # if (defined $scheduled_product_clone_id) {
+    #     $validation->required('scheduled_product_clone_id')->num();
+    #     if ($validation->has_error) {
+    #         return $self->render(text => 'Specified scheduled_product_id is invalid.', status => 400);
+    #     }
+    # }
+    # else {
+    #     return undef unless $self->validate_create_parameters;
+    # }
 
     # add parameters from the product to be cloned to the %params for the new scheduled product
     my %params;
@@ -185,12 +185,14 @@ sub create {
             delete $params{$_} for qw(_DEPRIORITIZEBUILD _OBSOLETE);
         }
     }
-
+    use Data::Dumper;
+    #log->debug(Dumper($self->current_user));
+    #print Dumper(%params);
     # add user-specified $params to %params for the new scheduled product and validate download parameters
     # note: keys are converted to upper-case, URL-encoded slashes are restored
     $params{uc $_} = ($params->{$_} =~ s@%2F@/@gr) for keys %$params;
     return undef unless $self->validate_download_parameters(\%params);
-
+    print Dumper {params => \%params, user => $self->current_user};
     # add entry to ScheduledProducts table and log event
     my $scheduled_product = $scheduled_products->create_with_event(\%params, $self->current_user);
     my $scheduled_product_id = $scheduled_product->id;

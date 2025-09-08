@@ -2,11 +2,23 @@ openapi: 3.0.3
 info:
   version: '1.0'
   title: OpenQA API
+externalDocs:
+  description: The official OpenQA doc
+  url: https://open.qa/docs/
 servers:
   - url: /api/v1
+tags:
+  - name: public
+    description: Those API routes which are public (no auth)
+  - name: ro
+    description: read-only routes
+security:
+  - basicAuth: []
 paths:
   /job_settings/jobs:
     get:
+      tags:
+        - public
       summary: Filters jobs based on a single setting key/value pair.
       operationId: apiv1_get_jobs_for_job_settings
       x-mojo-to: 'job_settings#jobs'
@@ -35,3 +47,169 @@ paths:
                     type: string
                   list_value:
                     type: string
+        '400':
+          description: Erroneous parameters (key invalid, list_value invalid)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_status:
+                    type: integer
+                  error:
+                    type: string
+                    example: Erroneous parameters (key invalid, list_value invalid)
+            text/plain:
+              schema:
+                type: string
+                example: Erroneous parameters (key invalid, list_value invalid)
+  /isos:
+    post:
+      tags:
+        - ro
+      summary: 'isos post to schedule new tests'
+      description: |
+        'Schedules jobs for assets matching required settings like DISTRI, VERSION, FLAVOR, and ARCH. Can also clone settings from a previous product.'
+      operationId: 'apiv1_create_iso'
+      x-mojo-to: 'iso#create'
+      parameters:
+        # - $ref: '#/components/parameters/CSRFHeader'
+        - in: cookie
+          name: debug
+          schema:
+            type: integer
+            enum: [0, 1]
+            default: 0
+        - in: cookie
+          name: csrftoken
+          schema:
+            type: string
+      requestBody:
+        description: 'Job settings for the new ISO. Provide either scheduling parameters or a clone ID.'
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              oneOf:
+                - $ref: "#/components/schemas/isosSync"
+                - $ref: "#/components/schemas/isosAsync"
+      responses:
+        '200':
+          description: 'OK. The jobs were scheduled synchronously.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsoSyncResponse'
+        '202':
+          description: 'Accepted. The job scheduling was enqueued to run asynchronously.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsoAsyncResponse'
+        '400':
+          description: 'Bad Request with something is missing or invalid.'
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Specified scheduled_product_id is invalid.'
+        '404':
+          description: 'Not Found.'
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Scheduled product to clone settings from not found.'
+components:
+  parameters:
+    CSRFHeader:
+      name: X-Requested-With
+      in: header
+      description: 'Required header to bypass CSRF check for API clients.'
+      required: true
+      schema:
+        type: string
+        default: XMLHttpRequest
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: "HTTP Basic Authentication using your username and a composite password of 'API_KEY:API_SECRET'."
+    oauth2Auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://id.opensuse.org/login/ldap
+          scopes:
+            admin: admin
+            operator: operator
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT   # optional, arbitrary value for documentation purposes
+
+  schemas:
+    isosSync:
+      type: object
+      required:
+        - DISTRI
+        - VERSION
+        - FLAVOR
+        - ARCH
+      properties:
+        DISTRI:
+          type: string
+          description: 'The Linux distribution.'
+          example: 'opensuse'
+        VERSION:
+          type: string
+          description: 'The distribution version.'
+          example: '15.4'
+        FLAVOR:
+          type: string
+          description: 'The build flavor, e.g., DVD, Live, etc.'
+          example: 'DVD'
+        ARCH:
+          type: string
+          description: 'The processor architecture.'
+          example: 'x86_64'
+        async:
+          type: boolean
+          description: 'If true, the operation runs as a background job.'
+
+    isosAsync:
+      type: object
+      required:
+        - scheduled_product_clone_id
+      properties:
+        scheduled_product_clone_id:
+          type: integer
+          description: 'ID of a previous product to clone settings from.'
+          example: 12345
+        async:
+          type: boolean
+          description: 'If true, the operation runs as a background job.'
+      additionalProperties: {}
+
+    IsoSyncResponse:
+      type: object
+      properties:
+        scheduled_product_id:
+          type: integer
+        count:
+          type: integer
+        ids:
+          type: array
+          items:
+            type: integer
+        failed:
+          type: object
+          additionalProperties: true
+
+    IsoAsyncResponse:
+      type: object
+      properties:
+        job_id:
+          type: integer
+        scheduled_product_id:
+          type: integer
