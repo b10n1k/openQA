@@ -1,0 +1,147 @@
+.mcp-chat-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    max-height: 60vh;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: #0099ff;
+    font-family: 'Courier New', monospace;
+    z-index: 9999;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    border-bottom: 2px solid #0099ff;
+
+    // Start hidden above the viewport
+    transform: translateY(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+
+    &.active {
+        transform: translateY(0);
+    }
+}
+.mcp-chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-bottom: 1px solid #0099ff;
+}
+
+.mcp-chat-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #0099ff;
+    text-shadow: 0 0 5px #0099ff;
+}
+
+.mcp-chat-close {
+    background: none;
+    border: none;
+    color: #0099ff;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    line-height: 1;
+
+    &:hover {
+        color: #ff0000;
+        text-shadow: 0 0 5px #ff0000;
+    }
+}
+
+// Messages area
+.mcp-chat-content {
+    overflow-y: auto;
+    max-height: calc(60vh - 60px); // Subtract header height
+    padding: 1rem;
+}
+
+.mcp-chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+// Individual message styling
+.mcp-prompt {
+    padding: 0.75rem;
+    border-left: 3px solid #0099ff;
+    background-color: rgba(0, 50, 0, 0.3);
+    animation: slideIn 0.3s ease-out;
+
+    &.user-prompt {
+        border-left-color: #0099ff;
+        background-color: rgba(0, 0, 50, 0.3);
+        color: #0099ff;
+    }
+
+    &.assistant-prompt {
+        border-left-color: #00ff00;
+        background-color: rgba(0, 50, 0, 0.3);
+        color: #00ff00;
+    }
+}
+
+.mcp-prompt-timestamp {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    margin-bottom: 0.25rem;
+}
+
+.mcp-prompt-text {
+    line-height: 1.5;
+
+    // Support for code blocks
+    code {
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+    }
+}
+
+// new messages
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+// Input area at the bottom
+.mcp-chat-input-area {
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-top: 1px solid #0099ff;
+}
+
+.mcp-chat-input {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 1px solid #0099ff;
+    color: #0099ff;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    padding: 0.5rem;
+    outline: none;
+
+    &::placeholder {
+        color: rgba(0, 153, 255, 0.5);
+    }
+
+    &:focus {
+        border-color: #00ff00;
+        box-shadow: 0 0 5px #0099ff;
+    }
+}
+
+// Dark theme support
+[data-bs-theme="dark"] .mcp-chat-container {
+    background-color: rgba(20, 20, 20, 0.98);
+}

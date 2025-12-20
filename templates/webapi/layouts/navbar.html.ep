@@ -54,6 +54,11 @@
                 </form>
             </li>
         % if ($current_user) {
+            <li class="nav-item nav-mcp-prompt-item">
+                <button type="button" id="mcp-toggle-btn" class="btn btn-primary btn-sm" title="Open MCP Chat" aria-label="Open MCP chat">
+                    <i class="fa fa-terminal"></i> MCP
+                </button>
+            </li>
             <li class="nav-item dropdown" id="user-action">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button"
                    aria-haspopup="true" aria-expanded="false"
@@ -110,3 +115,21 @@
    </div>
   </div>
 </nav>
+
+<!-- MCP Chat -->
+<div id="mcp-chat-dropdown" class="mcp-chat-container">
+    <div class="mcp-chat-header">
+        <span class="mcp-chat-title">openQA Assistant</span>
+        <button class="mcp-chat-close" aria-label="Close chat">
+          <i class="fa fa-times"></i>
+        </button>
+    </div>
+    <div class="mcp-chat-content">
+        <div id="mcp-chat-messages" class="mcp-chat-messages">
+            <!-- Messages will be inserted here dynamically -->
+        </div>
+    </div>
+    <div class="mcp-chat-input-area">
+        <input type="text" id="mcp-prompt" class="mcp-chat-input" placeholder="Ask about the job results..." aria-label="MCP prompt input">
+    </div>
+</div>

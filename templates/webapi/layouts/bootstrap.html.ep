@@ -38,6 +38,7 @@
           $(function() {
             setupForAll();
             backToTop();
+            setupMCPChat();
             %= content_for 'ready_function'
           });
       % end

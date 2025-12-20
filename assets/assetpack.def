@@ -142,6 +142,7 @@
 < javascripts/overview.js
 < javascripts/filter_form.js
 < javascripts/comments.js
+< javascripts/mcp_chat.js
 < javascripts/keyevent.js
 < javascripts/fullscreen.js
 < javascripts/obs_rsync.js
